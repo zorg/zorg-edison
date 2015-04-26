@@ -25,7 +25,8 @@ class Edison(Adaptor):
         }
 
     def servo_write(self, pin, degrees):
-        pulse_width = MIN_PULSE_WIDTH + (degrees / 180.0) * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH)
+        pulse_width = MIN_PULSE_WIDTH + \
+            (degrees / 180.0) * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH)
 
         self.pwm_write(pin, int(pulse_width), MAX_PERIOD)
 

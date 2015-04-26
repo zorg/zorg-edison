@@ -62,8 +62,6 @@ class ServoTests(TestCase):
             "The pin was not initialized"
         )
 
-        pin = self.edison.pins["pwm"][5]
-
         mock_mraa.Pwm.assert_called_with(5)
 
     def test_write_only_sets_pin_once(self):
@@ -76,7 +74,7 @@ class ServoTests(TestCase):
         self.assertEqual(
             self.edison.pins["pwm"][5],
             original_pin,
-            "The pin was overriden even though it had already been initialized"
+            "The pin was overridden even though it had already been initialized"
         )
 
     def test_write_enables_pin(self):
@@ -135,8 +133,6 @@ class DigitalTests(TestCase):
             "The pin was not initialized"
         )
 
-        pin = self.edison.pins["digital"][5]
-
         mock_mraa.Gpio.assert_called_with(5)
 
     def test_write_only_sets_pin_once(self):
@@ -149,7 +145,7 @@ class DigitalTests(TestCase):
         self.assertEqual(
             self.edison.pins["digital"][5],
             original_pin,
-            "The pin was overriden even though it had already been initialized"
+            "The pin was overridden even though it had already been initialized"
         )
 
     def test_write_sets_direction(self):
@@ -169,3 +165,58 @@ class DigitalTests(TestCase):
         self.edison.digital_write(5, 100)
 
         pin.write.assert_called_with(100)
+
+
+class AnalogTests(TestCase):
+
+    def setUp(self):
+        super(AnalogTests, self).setUp()
+
+        self.edison = Edison({})
+
+    def test_read_sets_up_pin(self):
+        self.edison.analog_read(5)
+
+        self.assertTrue(
+            5 in self.edison.pins["analog"],
+            "The pin was not initialized"
+        )
+
+        mock_mraa.Aio.assert_called_with(5)
+
+    def test_read_only_sets_pin_once(self):
+        original_pin = Mock()
+
+        self.edison.pins["analog"][5] = original_pin
+
+        self.edison.analog_read(5)
+
+        self.assertEqual(
+            self.edison.pins["analog"][5],
+            original_pin,
+            "The pin was overridden even though it had already been initialized"
+        )
+
+    def test_read_calls_read(self):
+        pin = Mock()
+
+        self.edison.pins["analog"][5] = pin
+
+        self.edison.analog_read(5)
+
+        pin.read.assert_called_with()
+
+    def test_read_returns_value(self):
+        pin = Mock()
+
+        pin.read.return_value = 100
+
+        self.edison.pins["analog"][5] = pin
+
+        value = self.edison.analog_read(5)
+
+        self.assertEqual(
+            value,
+            100,
+            "The value from read() was not returned"
+        )
