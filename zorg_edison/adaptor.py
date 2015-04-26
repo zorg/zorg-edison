@@ -33,11 +33,13 @@ class Edison(Adaptor):
         if not pin_number in self.pins["pwm"]:
             pin = mraa.Pwm(pin_number)
             self.pins["pwm"][pin_number] = pin
-            pin.period_us(period)
-
-            pin.enable(True)
         else:
             pin = self.pins["pwm"][pin_number]
+
+        pin.period_us(period)
+
+        # The pin needs to be enabled if it wasn't already
+        pin.enable(True)
 
         pin.pulsewidth_us(value)
 
