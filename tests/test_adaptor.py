@@ -94,3 +94,27 @@ class ServoTests(TestCase):
         self.edison.servo_write(5, 100)
 
         pin.period_us.assert_called_with(7968)
+
+    def test_write_min_width(self):
+        pin = Mock()
+        self.edison.pins["pwm"][5] = pin
+
+        self.edison.servo_write(5, 0)
+
+        pin.pulsewidth_us.assert_called_with(600)
+
+    def test_write_mid_width(self):
+        pin = Mock()
+        self.edison.pins["pwm"][5] = pin
+
+        self.edison.servo_write(5, 90)
+
+        pin.pulsewidth_us.assert_called_with(1600)
+
+    def test_write_max_width(self):
+        pin = Mock()
+        self.edison.pins["pwm"][5] = pin
+
+        self.edison.servo_write(5, 180)
+
+        pin.pulsewidth_us.assert_called_with(2600)

@@ -47,7 +47,6 @@ class Edison(Adaptor):
         if not pin_number in self.pins["digital"]:
             pin = mraa.Gpio(pin_number)
             self.pins["digital"][pin_number] = pin
-
         else:
             pin = self.pins["digital"][pin_number]
 
