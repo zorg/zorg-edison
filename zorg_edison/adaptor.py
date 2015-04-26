@@ -5,6 +5,7 @@ try:
     import mraa
 except ImportError:
     sys.stderr.write("Could not load the Python bindings for libmraa\n")
+    mraa = None
 
 
 MIN_PULSE_WIDTH = 600
