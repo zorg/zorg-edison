@@ -118,3 +118,54 @@ class ServoTests(TestCase):
         self.edison.servo_write(5, 180)
 
         pin.pulsewidth_us.assert_called_with(2600)
+
+
+class DigitalTests(TestCase):
+
+    def setUp(self):
+        super(DigitalTests, self).setUp()
+
+        self.edison = Edison({})
+
+    def test_write_sets_up_pin(self):
+        self.edison.digital_write(5, 100)
+
+        self.assertTrue(
+            5 in self.edison.pins["digital"],
+            "The pin was not initialized"
+        )
+
+        pin = self.edison.pins["digital"][5]
+
+        mock_mraa.Gpio.assert_called_with(5)
+
+    def test_write_only_sets_pin_once(self):
+        original_pin = Mock()
+
+        self.edison.pins["digital"][5] = original_pin
+
+        self.edison.digital_write(5, 100)
+
+        self.assertEqual(
+            self.edison.pins["digital"][5],
+            original_pin,
+            "The pin was overriden even though it had already been initialized"
+        )
+
+    def test_write_sets_direction(self):
+        pin = Mock()
+
+        self.edison.pins["digital"][5] = pin
+
+        self.edison.digital_write(5, 100)
+
+        pin.dir.assert_called_with(mock_mraa.DIR_OUT)
+
+    def test_write_works(self):
+        pin = Mock()
+
+        self.edison.pins["digital"][5] = pin
+
+        self.edison.digital_write(5, 100)
+
+        pin.write.assert_called_with(100)

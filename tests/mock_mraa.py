@@ -2,6 +2,9 @@ from mock import Mock
 import sys
 
 
+DIR_OUT = 0
+DIR_IN = 1
+
 Aio = Mock()
 Gpio = Mock()
 Pwm = Mock()
