@@ -22,6 +22,7 @@ class Edison(Adaptor):
             "digital": {},
             "analog": {},
             "pwm": {},
+            "i2c": {},
         }
 
     def servo_write(self, pin, degrees):
@@ -62,3 +63,18 @@ class Edison(Adaptor):
             pin = self.pins["analog"][pin_number]
 
         return pin.read()
+
+    def i2c_write(self, address, register, data):
+        """
+        Requires a device address, a register to write to,
+        and the data to write to the register.
+        """
+        if not address in self.pins["i2c"]:
+            bus = mraa.I2c(0)
+            bus.address(address)
+
+            self.pins["i2c"][address] = bus
+        else:
+            bus = self.pins["i2c"][address]
+
+        bus.writeReg(register, data)
