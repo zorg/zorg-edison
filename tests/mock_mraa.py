@@ -8,6 +8,7 @@ DIR_IN = 1
 Aio = Mock()
 Gpio = Mock()
 Pwm = Mock()
+I2c = Mock()
 
 
 def install_patch():

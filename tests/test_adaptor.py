@@ -15,7 +15,7 @@ class ConstructorTests(TestCase):
         self.edison = Edison({})
 
     def test_pins(self):
-        # Confirm the three pin classes are initialized
+        # Confirm the four pin classes are initialized
         self.assertTrue(
             "analog" in self.edison.pins,
             "Analog pins were not initialized"
@@ -27,6 +27,10 @@ class ConstructorTests(TestCase):
         self.assertTrue(
             "pwm" in self.edison.pins,
             "PWM pins were not initialized"
+        )
+        self.assertTrue(
+            "i2c" in self.edison.pins,
+            "I2C bus was not initialized"
         )
 
         # Confirm that no pins are connected by default
@@ -44,6 +48,11 @@ class ConstructorTests(TestCase):
             len(self.edison.pins["pwm"]),
             0,
             "There were PWM pins initialized by default"
+        )
+        self.assertEqual(
+            len(self.edison.pins["i2c"]),
+            0,
+            "There were I2C pins initialized by default"
         )
 
 
@@ -220,3 +229,44 @@ class AnalogTests(TestCase):
             100,
             "The value from read() was not returned"
         )
+
+
+class I2CTests(TestCase):
+
+    def setUp(self):
+        super(I2CTests, self).setUp()
+
+        self.edison = Edison({})
+
+    def test_write_sets_up_pin(self):
+        self.edison.i2c_write(0x3e, 0xFF, 0)
+
+        self.assertTrue(
+            0x3e in self.edison.pins["i2c"],
+            "The address was not initialized"
+        )
+
+        mock_mraa.I2c.assert_called_with(0)
+
+    def test_write_only_sets_pin_once(self):
+        original_pin = Mock()
+
+        self.edison.pins["i2c"][0x3e] = original_pin
+
+        self.edison.i2c_write(0x3e, 0x00, 1)
+
+        self.assertEqual(
+            self.edison.pins["i2c"][0x3e],
+            original_pin,
+            "The address was overridden even though" +
+            " it had already been initialized"
+        )
+
+    def test_write_works(self):
+        pin = Mock()
+
+        self.edison.pins["i2c"][0x00] = pin
+
+        self.edison.i2c_write(0x00, 0xFF, 0)
+
+        pin.writeReg.assert_called_with(0xFF, 0)
