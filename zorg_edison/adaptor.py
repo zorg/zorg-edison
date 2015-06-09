@@ -64,17 +64,16 @@ class Edison(Adaptor):
 
         return pin.read()
 
-    def i2c_write(self, address, register, data):
+    def i2c_write(self, pin_number, address, register, data):
         """
-        Requires a device address, a register to write to,
+        Requires a pin number, device address, a register to write to,
         and the data to write to the register.
         """
-        if not address in self.pins["i2c"]:
-            bus = mraa.I2c(0)
-            bus.address(address)
-
-            self.pins["i2c"][address] = bus
+        if not pin_number in self.pins["i2c"]:
+            bus = mraa.I2c(pin_number)
+            self.pins["i2c"][pin_number] = bus
         else:
-            bus = self.pins["i2c"][address]
+            bus = self.pins["i2c"][pin_number]
 
+        bus.address(address)
         bus.writeReg(register, data)
