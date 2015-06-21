@@ -49,9 +49,8 @@ class ConstructorTests(TestCase):
             0,
             "There were PWM pins initialized by default"
         )
-        self.assertEqual(
-            len(self.edison.pins["i2c"]),
-            0,
+        self.assertTrue(
+            self.edison.pins["i2c"] is None,
             "There were I2C pins initialized by default"
         )
 
@@ -239,10 +238,10 @@ class I2CTests(TestCase):
         self.edison = Edison({})
 
     def test_write_sets_up_pin(self):
-        self.edison.i2c_write(0x3e, 0xFF, 0)
+        self.edison.i2c_write(0, 0x3e, 0xFF, 0)
 
         self.assertTrue(
-            0x3e in self.edison.pins["i2c"],
+            self.edison.pins["i2c"] is not None,
             "The address was not initialized"
         )
 
@@ -251,12 +250,12 @@ class I2CTests(TestCase):
     def test_write_only_sets_pin_once(self):
         original_pin = Mock()
 
-        self.edison.pins["i2c"][0x3e] = original_pin
+        self.edison.pins["i2c"] = original_pin
 
-        self.edison.i2c_write(0x3e, 0x00, 1)
+        self.edison.i2c_write(0, 0x3e, 0x00, 1)
 
         self.assertEqual(
-            self.edison.pins["i2c"][0x3e],
+            self.edison.pins["i2c"],
             original_pin,
             "The address was overridden even though" +
             " it had already been initialized"
@@ -265,8 +264,8 @@ class I2CTests(TestCase):
     def test_write_works(self):
         pin = Mock()
 
-        self.edison.pins["i2c"][0x00] = pin
+        self.edison.pins["i2c"] = pin
 
-        self.edison.i2c_write(0x00, 0xFF, 0)
+        self.edison.i2c_write(0, 0x00, 0xFF, 0)
 
         pin.writeReg.assert_called_with(0xFF, 0)
