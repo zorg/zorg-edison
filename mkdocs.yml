@@ -1,5 +1,5 @@
 site_name: zorg-edison
-repo_url: https://github.com/zorg-framework/zorg-edison
+repo_url: https://github.com/zorg/zorg-edison
 pages:
 - Home: index.md
 theme: readthedocs
