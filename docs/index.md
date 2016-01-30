@@ -10,6 +10,11 @@ specified pin on the Intel Edison.
 An internal method that will be called by a driver class
 to write a pwm signal to a specified pin on the Intel Edison.
 
+## `digital_read(pin_number)`
+An internal method that will be called by a driver class
+to read a digital value from a specified pin on the Intel
+Edison.
+
 ## `digital_write(pin_number, value)`
 An internal method that will be called by a driver class
 to write a digital value to a specified pin on the Intel

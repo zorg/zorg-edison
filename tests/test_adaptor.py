@@ -174,6 +174,53 @@ class DigitalTests(TestCase):
 
         pin.write.assert_called_with(100)
 
+    def test_read_sets_up_pin(self):
+        self.edison.digital_read(5)
+
+        self.assertTrue(
+            5 in self.edison.pins["digital"],
+            "The pin was not initialized"
+        )
+
+        mock_mraa.Aio.assert_called_with(5)
+
+    def test_read_only_sets_pin_once(self):
+        original_pin = Mock()
+
+        self.edison.pins["digital"][5] = original_pin
+
+        self.edison.digital_read(5)
+
+        self.assertEqual(
+            self.edison.pins["digital"][5],
+            original_pin,
+            "The pin was overridden even though it had already been initialized"
+        )
+
+    def test_read_calls_read(self):
+        pin = Mock()
+
+        self.edison.pins["digital"][5] = pin
+
+        self.edison.digital_read(5)
+
+        pin.read.assert_called_with()
+
+    def test_read_returns_value(self):
+        pin = Mock()
+
+        pin.read.return_value = 100
+
+        self.edison.pins["digital"][5] = pin
+
+        value = self.edison.digital_read(5)
+
+        self.assertEqual(
+            value,
+            100,
+            "The value from read() was not returned"
+        )
+
 
 class AnalogTests(TestCase):
 
