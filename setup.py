@@ -18,9 +18,9 @@ requirements = req.readlines()
 
 setup(
     name="zorg-edison",
-    version="0.0.1",
+    version="0.0.2",
     url="https://github.com/zorg/zorg-edison",
-    description="Intel edison adapters for the Zorg framework.",
+    description="Intel Edison adapters for the Zorg framework.",
     long_description=readme("README.md"),
     author="Zorg Group",
     author_email="gunthercx@gmail.com",
