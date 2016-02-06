@@ -55,6 +55,17 @@ class Edison(Adaptor):
         pin.dir(mraa.DIR_OUT)
         pin.write(value)
 
+    def digital_read(self, pin_number):
+        if not pin_number in self.pins["digital"]:
+            pin = mraa.Gpio(pin_number)
+            self.pins["digital"][pin_number] = pin
+        else:
+            pin = self.pins["digital"][pin_number]
+
+        pin.dir(mraa.DIR_IN)
+
+        return pin.read()
+
     def analog_read(self, pin_number):
         if not pin_number in self.pins["analog"]:
             pin = mraa.Aio(pin_number)
