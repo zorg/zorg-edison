@@ -1,5 +1,7 @@
 # Zorg Edison
 
+[![Join the chat at https://gitter.im/zorg/zorg](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zorg/zorg?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 The `zorg-edison` module wraps the mraa library created by intel for interacting
 with IO pins on the Edison microcontroller. While the Python bindings for mraa
 work great on their own, the benefit of using Zorg is
